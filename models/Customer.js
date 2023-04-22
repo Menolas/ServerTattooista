@@ -19,18 +19,25 @@ const CustomerSchema = new mongoose.Schema({
     default: false,
   },
   contacts: {
-    email: { type: String },
+    email: {
+      type: String,
+      default: null
+    },
     insta: {
-      type: String
+      type: String,
+      default: null
     },
     phone: {
-      type: String
+      type: String,
+      default: null
     },
     whatsapp: {
-      type: String
+      type: String,
+      default: null
     },
     messenger: {
-      type: String
+      type: String,
+      default: null
     }
   }
 });

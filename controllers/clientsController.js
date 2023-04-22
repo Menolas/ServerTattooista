@@ -56,10 +56,12 @@ class clientsController {
       contacts: req.body.contacts
     });
     try {
-      const newClient = await client.save();
-      res.status(201).json(newClient);
+      await client.save();
+      const result = 0
+      res.status(201).json({result: result});
     } catch (err) {
-      res.status(400).json({ message: err.message })
+      const result = 1
+      res.status(400).json({ message: err.message, result: result })
     }
   }
 
@@ -84,9 +86,11 @@ class clientsController {
   async deleteClient(req, res) {
     try {
       await res.client.remove()
-      res.json({ message: 'Client Deleted' });
+      const result = 0
+      res.json({result: result})
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      const result = 1
+      res.status(500).json({ message: err.message, result: result });
     }
   }
 

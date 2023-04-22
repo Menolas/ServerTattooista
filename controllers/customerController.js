@@ -29,40 +29,48 @@ class customerController {
     customer.contacts = { ...oldData, ...{ [req.body.contact]: req.body.contactValue }}
 
     try {
-      const newCustomer = await customer.save();
-      res.status(201).json(newCustomer);
+      await customer.save();
+      const result = 0
+      res.status(201).json({result: result});
     } catch (err) {
-      res.status(400).json({ message: err.message })
+      const result = 1
+      res.status(400).json({ message: err.message, result: result })
     }
   }
 
   async deleteCustomer(req, res) {
-    
+
     try {
       await res.customer.remove();
-      res.json({ message: 'Customer Deleted' });
+      const result = 0
+      res.json({result: result})
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      const result = 1
+      res.status(500).json({ message: err.message, result: result });
     }
   }
 
   async contactCustomer(req, res) {
     res.customer.status = true;
     try {
-      const updatedCustomer = await res.customer.save();
-      res.json(updatedCustomer);
+      await res.customer.save();
+      const result = 0
+      res.json({result: result})
     } catch (err) {
-      res.status(400).json({ message: err.message });
+      const result = 1
+      res.status(400).json({ message: err.message, result: result });
     }
   }
 
   async unContactCustomer(req, res) {
     res.customer.status = false;
     try {
-      const updatedCustomer = await res.customer.save();
-      res.json(updatedCustomer);
+      await res.customer.save();
+      const result = 0
+      res.json({result: result})
     } catch (err) {
-      res.status(400).json({ message: err.message });
+      const result = 1
+      res.status(400).json({ message: err.message, result: result });
     }
   }
 

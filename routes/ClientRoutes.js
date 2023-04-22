@@ -22,7 +22,7 @@ router.get('/:id', getClient, controller.getClient);
 
 // Creating one
 
-//router.post('/', controller.addClient);
+router.post('/', controller.addClient);
 
 // router.post('/', upload.single('avatar'), async (req, res) => {
 //   const fileName = req.file != null ? req.file.filename : null;
