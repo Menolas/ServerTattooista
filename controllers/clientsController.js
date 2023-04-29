@@ -34,19 +34,28 @@ class clientsController {
   }
 
   async addClient(req, res) {
-    const fileName = req.file != null ? req.file.filename : null;
+    //const fileName = req.file != null ? req.file.filename : null;
     const client = new Client({
-      fullName: req.body.fullName,
-      avatar: fileName,
+      fullName: req.body.name,
+      contacts: {
+        email: req.body.email,
+        insta: req.body.insta,
+        phone: req.body.phone,
+        whatsapp: req.body.whatsapp,
+        messenger: req.body.messenger
+      },
+      avatar: req.body.file,
     });
 
     const oldData = { ...client.contacts }
     client.contacts = { ...oldData, ...{ [req.body.contact]: req.body.contactValue }}
     try {
-      const newClient = await client.save();
-      res.status(201).json(newClient);
+      await client.save();
+      const result = 0
+      res.status(201).json({result: result});
     } catch (err) {
-      res.status(400).json({ message: err.message })
+      const result = 1
+      res.status(400).json({ message: err.message, result: result })
     }
   }
 

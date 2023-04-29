@@ -13,9 +13,8 @@ const generateAccessToken = (id, roles) => {
     roles
   }
 
-  // const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '24h' })
-  // console.log(accessToken)
-  //return accessToken
+  // return = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '24h' })
+
   return jwt.sign(payload, secret, { expiresIn: '24h' })
 }
 
@@ -49,22 +48,26 @@ class authController {
 
   async login(req, res) {
     try {
+      const results = {}
       const { username, password } = req.body
       const user = await User.findOne({ username })
       if (!user) {
-        return res.status(400).json({ error: `admin login error` })
+        results.resultCode = 1
+        results.error = 'Nice try'
+        return res.status(400).json(results)
       }
       const validPassword = bcrypt.compareSync(password, user.password)
       if (!validPassword) {
-        return res.status(400).json({ error: 'password error' })
+        results.resultCode = 1
+        results.error = 'Nice try'
+        return res.status(400).json(results)
       }
       const token = generateAccessToken(user._id, user.roles)
       user.token = token
 
       const updatedUser = await user.save()
-      const results = {};
+      results.resultCode = 0
       results.user = updatedUser
-      results.token = token
       res.json(results)
     } catch (err) {
       res.status(400).json({ message: err.message })
@@ -74,9 +77,9 @@ class authController {
   async authenticateUser(req, res) {
     try {
       const token = req.headers.authorization.split(' ')[1]
-      const user = await User.findOne({ token })
+      const user = await User.findOne({token})
       if (user) {
-        res.json({ user })
+        res.json({resultCode: 0})
       }
     } catch (e) {
       console.log(e)
@@ -99,7 +102,7 @@ class authController {
       const result = 0
       res.json({result: result})
     } catch (e) {
-      const result = 0
+      const result = 1
       res.json({result: result})
       console.log(e)
     }
