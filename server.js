@@ -23,6 +23,7 @@ const rateLimit = require("express-rate-limit");
 app.use(cors());
 app.use(express.json());
 app.use(fileUpload({createParentPath: true,}));
+app.use('/avatars', express.static(__dirname + '/routes/uploads/avatars'));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -31,45 +32,6 @@ const limiter = rateLimit({
 
 app.use('/customers', customerRouter);
 app.use('/clients', clientRouter);
-
-app.post('/clients', limiter, async (req, res) => {
-  //console.log("REQUEST BODY !!!!!!!!" + req.body.files[0].name);
-  const fileName = req.body.files != null ? req.body.files[0].name : null;
-  const client = new Client({
-    fullName: req.body.name,
-    avatar: fileName,
-    contacts:{
-      email: req.body.email,
-      phone: req.body.phone,
-    },
-  });
-
-  try {
-    if (req.body.files && req.body.files[0]) {
-      [req.body.files].flat().map((file) => {
-        file.mv("./uploads/avatars" + file.name);
-      });
-    }
-
-    fs.writeFile("./uploads/data.json", JSON.stringify(req.body), "utf8", () => {
-      // res.send({
-      //   status: true,
-      //   message: "Data is uploaded",
-      // });
-      console.log("File is uploaded");
-    });
-    const newClient = await client.save();
-    res.status(201).json(newClient);
-  } catch (err) {
-    if (client.avatar != null) {
-      removeAvatar(client.avatar);
-    }
-    console.log('!!!!!' + err);
-    res.status(400).json({ message: err.message })
-  }
-});
-
-
 app.use('/auth', authRouter);
 app.use('/gallery', galleryRouter);
 app.use('/category', categoryRouter);
