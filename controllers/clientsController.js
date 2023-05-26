@@ -36,23 +36,23 @@ class clientsController {
   async addClient(req, res) {
     //const fileName = req.file != null ? req.file.filename : null;
     const client = new Client({
-      fullName: req.body.name,
+      fullName: req.body.values.name,
       contacts: {
-        email: req.body.email,
-        insta: req.body.insta,
-        phone: req.body.phone,
-        whatsapp: req.body.whatsapp,
-        messenger: req.body.messenger
+        email: req.body.values.email,
+        insta: req.body.values.insta,
+        phone: req.body.values.phone,
+        whatsapp: req.body.values.whatsapp,
+        messenger: req.body.values.messenger
       },
-      avatar: req.body.file,
+      avatar: req.body.avatar,
     });
 
     const oldData = { ...client.contacts }
     client.contacts = { ...oldData, ...{ [req.body.contact]: req.body.contactValue }}
     try {
-      await client.save();
-      const result = 0
-      res.status(201).json({result: result});
+      let newClient = await client.save();
+      let result = newClient._id
+      res.status(201).json({result});
     } catch (err) {
       const result = 1
       res.status(400).json({ message: err.message, result: result })
@@ -71,6 +71,26 @@ class clientsController {
     } catch (err) {
       const result = 1
       res.status(400).json({ message: err.message, result: result })
+    }
+  }
+
+  async updateClientAvatar(req, res) {
+    console.log("!!!!!!!!!!+++++++++++++++++++")
+    if (!req.body) {
+      return res.status(400).send({
+        message: "Data to update can not be empty!"
+      });
+    }
+
+    console.log(res.client + "!!!!!!!!!!!")
+    //res.client.avatar = req.body.avatar;
+
+    try {
+      console.log(req.body + "try!!!!!!!!!!")
+      //const updatedClient = await res.client.save();
+      //res.json(updatedClient);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
     }
   }
 

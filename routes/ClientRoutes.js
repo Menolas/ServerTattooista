@@ -40,15 +40,14 @@ router.post('/avatar', (req, res) => {
       console.error(err)
       return res.status(500).send(err)
     }
-
-    console.log(__dirname)
-
-    res.json({
-      fileName: file.name,
-      filePath: `avatars/${newFileName}`
-    })
+    const result = `avatars/${newFileName}`
+    res.status(201).json({result: result});
   })
 });
+
+// update client avatar
+
+router.post('updateAvatar/:id', getClient, controller.updateClientAvatar);
 
 // update client contact
 
