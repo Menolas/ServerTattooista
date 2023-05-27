@@ -23,16 +23,40 @@ class clientsController {
     res.send(res.client);
   }
 
+  // async addClient(req, res) {
+  //   const client = new Client({
+  //     fullName: req.body.name,
+  //     avatar: req.protocol + '://' + req.get('host') + '/uploads/' + req.file.filename,
+  //     contacts: {
+  //       email: req.body.email,
+  //       insta: req.body.insta,
+  //       phone: req.body.phone,
+  //       whatsapp: req.body.whatsapp,
+  //       messenger: req.body.messenger
+  //     },
+  //     gallery: req.body.gallery
+  //   });
+  //
+  //   try {
+  //     let newClient = await client.save();
+  //     let result = newClient._id
+  //     res.status(201).json({result});
+  //   } catch (err) {
+  //     const result = 1
+  //     res.status(400).json({ message: err.message, result: result })
+  //   }
+  // }
+
   async addClient(req, res) {
     const client = new Client({
-      fullName: req.body.values.name,
-      avatar: req.body.avatar,
+      fullName: req.body.name,
+      //avatar: req.protocol + '://' + req.get('host') + '/uploads/' + req.file.filename,
       contacts: {
-        email: req.body.values.email,
-        insta: req.body.values.insta,
-        phone: req.body.values.phone,
-        whatsapp: req.body.values.whatsapp,
-        messenger: req.body.values.messenger
+        email: req.body.email,
+        insta: req.body.insta,
+        phone: req.body.phone,
+        whatsapp: req.body.whatsapp,
+        messenger: req.body.messenger
       },
       gallery: req.body.gallery
     });
@@ -40,6 +64,16 @@ class clientsController {
     try {
       let newClient = await client.save();
       let result = newClient._id
+      console.log(req)
+
+      const file = req.files.avatar
+      //if (!file) return res.json({ error: 'Incorrect input name'})
+      const newFileName = encodeURI(Date.now() + '_' + file.name)
+      await file.mv(`./uploads/${result}/${newFileName}`, err => {
+        client.avatar = newFileName
+        client.save();
+      });
+
       res.status(201).json({result});
     } catch (err) {
       const result = 1
@@ -60,27 +94,6 @@ class clientsController {
       const result = 1
       res.status(400).json({ message: err.message, result: result })
     }
-  }
-
-  async uploadClientAvatar(req, res) {
-    if (!req.files) {
-      return res.status(400).json({msg: 'No file uploaded'})
-    }
-
-    const file = req.files.file
-
-    if (!file) return res.json({ error: 'Incorrect input name'})
-
-    const newFileName = encodeURI(Date.now() + '_' + file.name)
-
-    file.mv(`./uploads/avatars/${newFileName}`, err => {
-      if (err) {
-        console.error(err)
-        return res.status(500).send(err)
-      }
-      const result = `avatars/${newFileName}`
-      res.status(201).json({result: result});
-    })
   }
 
   async updateClientAvatar(req, res) {

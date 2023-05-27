@@ -19,12 +19,12 @@ const rateLimit = require("express-rate-limit");
 app.use(cors());
 app.use(express.json());
 app.use(fileUpload({createParentPath: true,}));
-app.use('/avatars', express.static(__dirname + '/uploads/avatars'));
+app.use('/', express.static(__dirname + '/uploads'));
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 100 // limit each IP to 100 requests per windowMs
+// });
 
 app.use('/customers', customerRouter);
 app.use('/clients', clientRouter);
