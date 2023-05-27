@@ -24,26 +24,8 @@ router.get('/:id', getClient, controller.getClient);
 router.post('/', controller.addClient);
 
 // uploading avatar
-router.post('/avatar', (req, res) => {
-  if (!req.files) {
-    return res.status(400).json({msg: 'No file uploaded'})
-  }
 
-  const file = req.files.file
-
-  if (!file) return res.json({ error: 'Incorrect input name'})
-
-  const newFileName = encodeURI(Date.now() + '_' + file.name)
-
-  file.mv(`${__dirname}/uploads/avatars/${newFileName}`, err => {
-    if (err) {
-      console.error(err)
-      return res.status(500).send(err)
-    }
-    const result = `avatars/${newFileName}`
-    res.status(201).json({result: result});
-  })
-});
+router.post('/avatar', controller.uploadClientAvatar);
 
 // update client avatar
 

@@ -5,11 +5,7 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const path = require('path');
-const fs = require('fs');
-const morgan = require("morgan");
 const PORT = process.env.PORT || 3030;
-const Client = require('./models/Client');
 
 const customerRouter = require('./routes/CustomerRoutes');
 const clientRouter = require('./routes/ClientRoutes');
@@ -23,7 +19,7 @@ const rateLimit = require("express-rate-limit");
 app.use(cors());
 app.use(express.json());
 app.use(fileUpload({createParentPath: true,}));
-app.use('/avatars', express.static(__dirname + '/routes/uploads/avatars'));
+app.use('/avatars', express.static(__dirname + '/uploads/avatars'));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

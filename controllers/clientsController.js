@@ -1,14 +1,4 @@
 const Client = require('../models/Client');
-/* const multer = require('multer');
-const path = require('path');
-const uploadPath = path.join('public', Client.avatarBasePath);
-const imageMimeTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-const upload = multer({
-  dest: uploadPath,
-  fileFilter: (req, file, callback) => {
-    callback(null, imageMimeTypes.includes(file.mimetype));
-  }
-}); */
 
 class clientsController {
 
@@ -34,9 +24,9 @@ class clientsController {
   }
 
   async addClient(req, res) {
-    //const fileName = req.file != null ? req.file.filename : null;
     const client = new Client({
       fullName: req.body.values.name,
+      avatar: req.body.avatar,
       contacts: {
         email: req.body.values.email,
         insta: req.body.values.insta,
@@ -44,11 +34,9 @@ class clientsController {
         whatsapp: req.body.values.whatsapp,
         messenger: req.body.values.messenger
       },
-      avatar: req.body.avatar,
+      gallery: req.body.gallery
     });
 
-    const oldData = { ...client.contacts }
-    client.contacts = { ...oldData, ...{ [req.body.contact]: req.body.contactValue }}
     try {
       let newClient = await client.save();
       let result = newClient._id
@@ -72,6 +60,27 @@ class clientsController {
       const result = 1
       res.status(400).json({ message: err.message, result: result })
     }
+  }
+
+  async uploadClientAvatar(req, res) {
+    if (!req.files) {
+      return res.status(400).json({msg: 'No file uploaded'})
+    }
+
+    const file = req.files.file
+
+    if (!file) return res.json({ error: 'Incorrect input name'})
+
+    const newFileName = encodeURI(Date.now() + '_' + file.name)
+
+    file.mv(`./uploads/avatars/${newFileName}`, err => {
+      if (err) {
+        console.error(err)
+        return res.status(500).send(err)
+      }
+      const result = `avatars/${newFileName}`
+      res.status(201).json({result: result});
+    })
   }
 
   async updateClientAvatar(req, res) {
