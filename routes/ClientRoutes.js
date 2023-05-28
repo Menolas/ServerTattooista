@@ -4,14 +4,34 @@ const path = require('path');
 const Client = require('../models/Client');
 const controller = require('../controllers/clientsController');
 //const multer = require('multer');
-// const imageMimeTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-// const uploadPath = path.join('public', Client.avatarBasePath);
-// const upload = multer({
-//   dest: uploadPath,
-//   fileFilter: (req, file, callback) => {
-//     callback(null, imageMimeTypes.includes(file.mimetype))
+
+// const storage = multer.diskStorage(
+//   {
+//     destination: (req, file, cb) => {
+//       cb(null, './uploads');
+//     },
+//     filename: (req, file, cb) => {
+//       cb(
+//           null,
+//           new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname
+//       );
+//     }
+//   });
+//
+// const fileFilter = (req, file, cb) => {
+//   if (
+//       file.mimetype === 'image/png' ||
+//       file.mimetype === 'image/jpg' ||
+//       file.mimetype === 'image/jpeg' ||
+//       file.mimetype === 'image/web'
+//   ) {
+//     cb(null, true);
+//   } else {
+//     cb(null, false);
 //   }
-// });
+// };
+
+//const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 // Getting all
 router.get('/', controller.getClients);
@@ -21,11 +41,9 @@ router.get('/:id', getClient, controller.getClient);
 
 // Creating one
 
+//router.post('/', upload.single('avatar'), controller.addClient);
+
 router.post('/', controller.addClient);
-
-// uploading avatar
-
-router.post('/avatar', controller.uploadClientAvatar);
 
 // update client avatar
 
@@ -42,11 +60,11 @@ router.delete('/:id', getClient, controller.deleteClient);
 
 router.post('/customerToClient', controller.customerToClient);
 
-function removeAvatar(fileName) {
-  fs.unlink(path.join(uploadPath, fileName), err => {
-    if (err) console.log(err)
-  })
-}
+// function removeAvatar(fileName) {
+//   fs.unlink(path.join(uploadPath, fileName), err => {
+//     if (err) console.log(err)
+//   })
+// }
 
 async function getClient(req, res, next) {
   let client;
