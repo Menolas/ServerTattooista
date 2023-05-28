@@ -47,7 +47,7 @@ router.post('/', controller.addClient);
 
 // update client avatar
 
-router.post('updateAvatar/:id', getClient, controller.updateClientAvatar);
+router.post('updateGallery/:id', getClient, controller.updateClientGallery);
 
 // update client contact
 
@@ -59,6 +59,10 @@ router.delete('/:id', getClient, controller.deleteClient);
 // adding a client from customers
 
 router.post('/customerToClient', controller.customerToClient);
+
+// edit client
+
+router.post('/edit/:id', getClient, controller.editClient);
 
 // function removeAvatar(fileName) {
 //   fs.unlink(path.join(uploadPath, fileName), err => {
