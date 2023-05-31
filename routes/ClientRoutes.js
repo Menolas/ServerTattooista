@@ -47,7 +47,7 @@ router.post('/', controller.addClient);
 
 // update client avatar
 
-router.post('updateGallery/:id', getClient, controller.updateClientGallery);
+router.post('/updateGallery/:id', getClient, controller.updateClientGallery);
 
 // update client contact
 

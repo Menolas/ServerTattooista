@@ -31,10 +31,10 @@ class customerController {
     try {
       await customer.save();
       const result = 0
-      res.status(201).json({result: result});
+      res.status(201).json({result});
     } catch (err) {
       const result = 1
-      res.status(400).json({ message: err.message, result: result })
+      res.status(400).json({ message: err.message, result })
     }
   }
 
@@ -43,10 +43,10 @@ class customerController {
     try {
       await res.customer.remove();
       const result = 0
-      res.json({result: result})
+      res.json(result)
     } catch (err) {
       const result = 1
-      res.status(500).json({ message: err.message, result: result });
+      res.status(500).json({ message: err.message, result });
     }
   }
 
@@ -55,10 +55,10 @@ class customerController {
     try {
       await res.customer.save();
       const result = 0
-      res.json({result: result})
+      res.json(result)
     } catch (err) {
       const result = 1
-      res.status(400).json({ message: err.message, result: result });
+      res.status(400).json({ message: err.message, result });
     }
   }
 
@@ -67,7 +67,7 @@ class customerController {
     try {
       await res.customer.save();
       const result = 0
-      res.json({result: result})
+      res.json(result)
     } catch (err) {
       const result = 1
       res.status(400).json({ message: err.message, result: result });

@@ -78,8 +78,10 @@ class authController {
     try {
       const token = req.headers.authorization.split(' ')[1]
       const user = await User.findOne({token})
+      let result = 1
       if (user) {
-        res.json({resultCode: 0})
+        result = 0
+        res.json(result)
       }
     } catch (e) {
       console.log(e)
