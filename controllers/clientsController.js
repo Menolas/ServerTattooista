@@ -30,7 +30,7 @@ class clientsController {
       });
     }
 
-    res.client.fullName = req.body.name,
+    res.client.fullName = req.body.name
     res.client.contacts.email = req.body.email
     res.client.contacts.insta = req.body.insta
     res.client.contacts.phone = req.body.phone
@@ -40,7 +40,7 @@ class clientsController {
     try {
       const updatedClient = await res.client.save();
       let result = updatedClient._id
-      if (req.files.avatar) {
+      if (req.files && req.files.avatar) {
         const file = req.files.avatar
         const newFileName = encodeURI(Date.now() + '_' + file.name)
         await file.mv(`./uploads/${result}/${newFileName}`, err => {
@@ -56,16 +56,24 @@ class clientsController {
   }
 
   async updateClientGallery(req, res) {
-    if (!req.files) {
+    if (!req.body.gallery) {
       return res.status(400).send({
         message: "Data to update can not be empty!"
       });
     }
-
+    let result = res.client._id
+    let newGallery = []
     const files = req.files
-    console.log(files)
+    for (let key in files) {
+      const fileNewName = encodeURI(Date.now() + '_' + files[key].name)
+      newGallery.push(fileNewName)
+      await files[key].mv(`./uploads/doneTattooGallery/${result}/${fileNewName}`, err => {
+        //newGallery.push(fileNewName)
+      });
+    }
+
     const oldData = [...res.client.gallery]
-    //res.client.gallery = [...oldData, ...files]
+    res.client.gallery = [...oldData, ...newGallery]
 
     try {
       const updatedClient = await res.client.save();
@@ -98,7 +106,6 @@ class clientsController {
         client.avatar = newFileName
         client.save();
       });
-
       res.status(201).json({result});
     } catch (err) {
       const result = 1
@@ -113,11 +120,11 @@ class clientsController {
     });
     try {
       await client.save();
-      const result = 0
-      res.status(201).json({result: result});
+      const result = client._id
+      res.status(201).json({clientId: result});
     } catch (err) {
       const result = 1
-      res.status(400).json({ message: err.message, result: result })
+      res.status(400).json({ message: err.message, result })
     }
   }
 
@@ -143,7 +150,7 @@ class clientsController {
     try {
       await res.client.remove()
       const result = 0
-      res.json({result: result})
+      res.json(result)
     } catch (err) {
       const result = 1
       res.status(500).json({ message: err.message, result: result });
