@@ -11,11 +11,12 @@ router.get('/', controller.getCustomers );
 // Creating one
 router.post('/', controller.createCustomer);
 
-// Updating one
-router.patch('/contact/:id', getCustomer, controller.contactCustomer);
+// Change customer status
+router.patch('/status/:id', getCustomer, controller.changeCustomerStatus);
 
-// Updating one
-router.patch('/unContact/:id', getCustomer, controller.unContactCustomer);
+// turn customer to client
+
+router.post('/customerToClient/:id', getCustomer, controller.customerToClient);
 
 // Deleting one
 router.delete('/:id', getCustomer, controller.deleteCustomer);
@@ -33,6 +34,6 @@ async function getCustomer(req, res, next) {
 
   res.customer = customer
   next()
-} 
+}
 
 module.exports = router;

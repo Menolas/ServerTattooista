@@ -1,21 +1,34 @@
-const Customer = require('../models/Customer');
+const Customer = require('../models/Customer')
+const Client = require("../models/Client");
 
 class customerController {
 
   async getCustomers (req, res) {
-    const page = parseInt(req.query.page);
-    const limit = parseInt(req.query.limit);
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const results = {};
+    let page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
+    const status = req.query.status
+    const term = req.query.term
+    let customers = []
+    const results = {}
 
     try {
-      const customers = await Customer.find();
-      results.totalCount = customers.length;
-      results.resultCustomers = customers.slice(startIndex, endIndex);
+      if (status === 'undefined' && !term) {
+        customers = await Customer.find().sort({createdAt: -1})
+      } else if (status !== 'undefined' && !term) {
+        customers = await Customer.find({status: status}).sort({createdAt: -1})
+      } else if (status !== 'undefined' && term) {
+        customers = await Customer.find({fullName: term, status: status}).sort({createdAt: -1})
+      } else if (status === 'undefined' && term) {
+        customers = await Customer.find({fullName: term}).sort({createdAt: -1})
+      }
+
+      results.totalCount = customers.length
+      results.resultCustomers = customers.slice(startIndex, endIndex)
       res.json(results)
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ message: err.message })
     }
   }
 
@@ -27,53 +40,66 @@ class customerController {
 
     const oldData = { ...customer.contacts }
     customer.contacts = { ...oldData, ...{ [req.body.contact]: req.body.contactValue }}
+    const results = {}
 
     try {
-      await customer.save();
-      const result = 0
-      res.status(201).json({result});
+      await customer.save()
+      results.resultCode = 0
+      results.customer = customer
+      res.status(201).json({results})
     } catch (err) {
-      const result = 1
-      res.status(400).json({ message: err.message, result })
+      results.resultCode = 1
+      res.status(400).json({ message: err.message, results })
     }
   }
 
   async deleteCustomer(req, res) {
+    const results = {}
 
     try {
-      await res.customer.remove();
-      const result = 0
-      res.json(result)
+      await res.customer.remove()
+      results.resultCode = 0
+      res.json(results)
     } catch (err) {
-      const result = 1
-      res.status(500).json({ message: err.message, result });
+      results.resultCode = 1
+      results.message = err.message
+      res.status(500).json(results)
     }
   }
 
-  async contactCustomer(req, res) {
-    res.customer.status = true;
-    try {
-      await res.customer.save();
-      const result = 0
-      res.json(result)
-    } catch (err) {
-      const result = 1
-      res.status(400).json({ message: err.message, result });
-    }
-  }
-
-  async unContactCustomer(req, res) {
-    res.customer.status = false;
+  async changeCustomerStatus(req, res) {
+    res.customer.status = !req.body.status
+    const results = {}
     try {
       await res.customer.save();
-      const result = 0
-      res.json(result)
+      results.status = res.customer.status
+      results.resultCode = 0
+      res.json(results)
     } catch (err) {
-      const result = 1
-      res.status(400).json({ message: err.message, result: result });
+      results.resultCode = 1
+      res.status(400).json({ message: err.message, results })
     }
   }
 
+  async customerToClient(req, res) {
+    const client = new Client({
+      fullName: req.body.fullName,
+      contacts: req.body.contacts
+    })
+    const results = {}
+
+    try {
+      await res.customer.remove()
+      await client.save()
+      results.client = client
+      results.resultCode = 0
+      res.status(201).json(results)
+    } catch (err) {
+      results.resultCode = 1
+      results.message = err.message
+      res.status(400).json(results)
+    }
+  }
 }
 
-module.exports = new customerController();
+module.exports = new customerController()
