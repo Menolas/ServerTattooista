@@ -1,5 +1,5 @@
 const Client = require('../models/Client')
-const Customer = require("../models/Customer");
+//const Customer = require("../models/Customer");
 
 class clientsController {
 
@@ -21,11 +21,11 @@ class clientsController {
       } else if (gallery === '0' && !term) {
         clients = await Client.find({$where: "this.gallery.length < 1"}).sort({createdAt: -1})
       } else if (gallery === 'any' && term) {
-        clients = await Client.find({fullName: term}).sort({createdAt: -1})
+        clients = await Client.find({fullName: {$regex: term, $options: 'i'}}).sort({createdAt: -1})
       } else if (gallery === '1' && term) {
-        clients = await Client.find({$where: "this.gallery.length > 0", fullName: term}).sort({createdAt: -1})
+        clients = await Client.find({$where: "this.gallery.length > 0", fullName: {$regex: term, $options: 'i'}}).sort({createdAt: -1})
       } else if (gallery === '0' && term) {
-        clients = await Client.find({$where: "this.gallery.length < 1", fullName: term}).sort({createdAt: -1})
+        clients = await Client.find({$where: "this.gallery.length < 1", fullName: {$regex: term, $options: 'i'}}).sort({createdAt: -1})
       }
 
       results.totalCount = clients.length

@@ -19,9 +19,9 @@ class customerController {
       } else if (status !== 'undefined' && !term) {
         customers = await Customer.find({status: status}).sort({createdAt: -1})
       } else if (status !== 'undefined' && term) {
-        customers = await Customer.find({fullName: term, status: status}).sort({createdAt: -1})
+        customers = await Customer.find({fullName: {$regex: term, $options: 'i'}, status: status}).sort({createdAt: -1})
       } else if (status === 'undefined' && term) {
-        customers = await Customer.find({fullName: term}).sort({createdAt: -1})
+        customers = await Customer.find({fullName: {$regex: term, $options: 'i'}}).sort({createdAt: -1})
       }
 
       results.totalCount = customers.length
