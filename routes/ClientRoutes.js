@@ -49,16 +49,12 @@ router.post('/', controller.addClient);
 
 router.post('/updateGallery/:id', getClient, controller.updateClientGallery);
 
-// update client contact
-
-router.post('/updateContact/:id', getClient, controller.updateClientContact);
-
 // Deleting one
 router.delete('/:id', getClient, controller.deleteClient);
 
 // adding a client from customers
 
-router.post('/customerToClient', controller.customerToClient);
+//router.post('/customerToClient', controller.customerToClient);
 
 // edit client
 

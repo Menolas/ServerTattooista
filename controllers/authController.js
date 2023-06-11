@@ -102,10 +102,10 @@ class authController {
     try {
       await res.user.save()
       const result = 0
-      res.json({result: result})
+      res.json(result)
     } catch (e) {
       const result = 1
-      res.json({result: result})
+      res.json(result)
       console.log(e)
     }
   }
