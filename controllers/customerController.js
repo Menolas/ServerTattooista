@@ -14,13 +14,13 @@ class customerController {
     const results = {}
 
     try {
-      if (status === 'undefined' && !term) {
+      if (status === 'null' && !term) {
         customers = await Customer.find().sort({createdAt: -1})
-      } else if (status !== 'undefined' && !term) {
+      } else if (status !== 'null' && !term) {
         customers = await Customer.find({status: status}).sort({createdAt: -1})
-      } else if (status !== 'undefined' && term) {
+      } else if (status !== 'null' && term) {
         customers = await Customer.find({fullName: {$regex: term, $options: 'i'}, status: status}).sort({createdAt: -1})
-      } else if (status === 'undefined' && term) {
+      } else if (status === 'null' && term) {
         customers = await Customer.find({fullName: {$regex: term, $options: 'i'}}).sort({createdAt: -1})
       }
 
