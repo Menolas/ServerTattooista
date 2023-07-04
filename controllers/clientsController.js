@@ -31,8 +31,8 @@ class clientsController {
       results.totalCount = clients.length
       results.resultClients = clients.slice(startIndex, endIndex)
       res.json(results)
-    } catch (err) {
-      res.status(500).json({ message: err.message })
+    } catch (e) {
+      res.status(500).json({ message: e.message })
     }
   }
 
@@ -65,7 +65,7 @@ class clientsController {
         const newFileName = encodeURI(Date.now() + '_' + file.name)
         await file.mv(`./uploads/${updatedClient._id}/${newFileName}`, err => {
           res.client.avatar = newFileName
-          res.client.save()
+          res.status(200).client.save()
         });
       }
       res.json(results)
@@ -85,6 +85,7 @@ class clientsController {
 
     let newGallery = []
     const files = req.files
+
     for (let key in files) {
       const fileNewName = encodeURI(Date.now() + '_' + files[key].name)
       newGallery.push(fileNewName)
@@ -95,10 +96,11 @@ class clientsController {
 
     const oldData = [...res.client.gallery]
     res.client.gallery = [...oldData, ...newGallery]
+    const results = {}
 
     try {
       const updatedClient = await res.client.save()
-      const results = {}
+
       results.client = updatedClient
       results.resultCode = 0
       res.json(results)

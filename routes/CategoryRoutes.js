@@ -6,7 +6,11 @@ const controller = require('../controllers/categoryController');
 
 //getting all categories
 
-router.get('/', controller.getCategories);
+router.get('/', controller.getCategories)
+
+//getting active category
+
+router.get('/activeTattooStyle', controller.getActiveCategory)
 
 // Deleting one
 router.delete('/:id', getCategory, controller.deleteCategory);
@@ -28,7 +32,7 @@ async function getCategory(req, res, next) {
 
   res.category = category
   next()
-} 
+}
 
 module.exports = router;
 

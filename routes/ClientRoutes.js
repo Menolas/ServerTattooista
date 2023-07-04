@@ -37,34 +37,28 @@ const controller = require('../controllers/clientsController');
 router.get('/', controller.getClients);
 
 // Getting one
-router.get('/:id', getClient, controller.getClient);
+router.get('/:id', getClient, controller.getClient)
 
 // Creating one
 
-//router.post('/', upload.single('avatar'), controller.addClient);
+//router.post('/', upload.single('avatar'), controller.addClient)
 
-router.post('/', controller.addClient);
+router.post('/', controller.addClient)
 
 // update client avatar
 
-router.post('/updateGallery/:id', getClient, controller.updateClientGallery);
+router.post('/updateGallery/:id', getClient, controller.updateClientGallery)
 
 // Deleting one
-router.delete('/:id', getClient, controller.deleteClient);
+router.delete('/:id', getClient, controller.deleteClient)
 
 // adding a client from customers
 
-//router.post('/customerToClient', controller.customerToClient);
+//router.post('/customerToClient', controller.customerToClient)
 
 // edit client
 
-router.post('/edit/:id', getClient, controller.editClient);
-
-// function removeAvatar(fileName) {
-//   fs.unlink(path.join(uploadPath, fileName), err => {
-//     if (err) console.log(err)
-//   })
-// }
+router.post('/edit/:id', getClient, controller.editClient)
 
 async function getClient(req, res, next) {
   let client;
